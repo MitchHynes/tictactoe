@@ -1,4 +1,3 @@
-import node as n
 import time
 import model
 from subprocess import call

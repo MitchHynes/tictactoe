@@ -1,5 +1,5 @@
-import player
 import game
+import model
 import argparse
 
 parser = argparse.ArgumentParser(description="setup tictactoe game")
@@ -11,8 +11,8 @@ parser.add_argument('pi2', nargs='?', default="O", type=str, help="player2 piece
 
 args = parser.parse_args()
 
-player1 = player.Player(args.p1, args.pi1)
-player2 = player.Player(args.p2, args.pi2)
+player1 = model.Player(args.p1, args.pi1)
+player2 = model.Player(args.p2, args.pi2)
 player1.opponent = player2
 player2.opponent = player1
 game1 = game.Game(player1, player2, args.b)

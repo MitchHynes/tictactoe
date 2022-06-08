@@ -1,7 +1,64 @@
-import player as p
-import node as n
-import winningpath as w
 import random
+
+class Node:
+
+    def __init__(self, state, ID):
+        self.state = state
+        self.ID = ID
+
+class Player:
+
+    def __init__(self, mode, piece):
+
+        self.mode = mode
+        self.piece = piece
+        self.opponent = None
+
+
+class Winningpath:
+
+    def __init__(self, ID, nodeIDs):
+
+        self.ID = ID
+        self.nodeIDs = nodeIDs
+        self.nodes = []  
+        self.state = 0
+
+    def addnode(self, node):
+        self.nodes.append(node)
+        for i in range(0, len(self.nodes)- 1):
+            if self.nodes[i].state != self.nodes[i+1].state:
+                self.state = -1 #cant win in this winningpath now
+                return None
+
+        if len(self.nodes) == len(self.nodeIDs):
+            self.state = 1 #won the game
+            return None
+
+        return None
+
+    def nodesneeded(self):
+        
+        needed = []
+        for i in self.nodeIDs:
+            needID = True
+            for node in self.nodes:
+                if node.ID == i:
+                    needID = False
+            if needID:
+                needed.append(i)
+
+        return needed
+
+    def displayinfo(self):
+        print("\n")
+        print("path ID: " + self.ID)
+        print("nodes currently on path:") 
+        for node in self.nodes:
+            print("\tID: " + node.ID)
+            print("\tstate: " + str(node.state))
+        print("path state:" + str(self.state))
+        print("nodes needed: " + str(self.nodesneeded()))
 
 class Boardstate:
 
@@ -21,7 +78,7 @@ class Boardstate:
                 nodeIDs.append(str(i) + str(j))
                 fullid = fullid + str(i) + str(j)
 
-            temp = w.Winningpath(fullid, nodeIDs)
+            temp = Winningpath(fullid, nodeIDs)
             self.winningpaths.append(temp)
 
         #vertical
@@ -32,7 +89,7 @@ class Boardstate:
                 nodeIDs.append(str(j) + str(i))
                 fullid = fullid + str(j) + str(i)
 
-            temp = w.Winningpath(fullid, nodeIDs)
+            temp = Winningpath(fullid, nodeIDs)
             self.winningpaths.append(temp)
 
         #diagonal top left bottom right
@@ -42,7 +99,7 @@ class Boardstate:
         for i in range(1, boardsize + 1):
             nodeIDs.append(str(i) + str(i))
             fullid = fullid + str(i) + str(i)
-        temp = w.Winningpath(fullid, nodeIDs)
+        temp = Winningpath(fullid, nodeIDs)
         self.winningpaths.append(temp)
 
         #diagonal bottom left top right
@@ -52,7 +109,7 @@ class Boardstate:
         for i in range(1, boardsize + 1):
             nodeIDs.append(str(self.boardsize +1 - i) + str(i))
             fullid = fullid + str(self.boardsize + 1 - i) + str(i)
-        temp = w.Winningpath(fullid, nodeIDs)
+        temp = Winningpath(fullid, nodeIDs)
         self.winningpaths.append(temp)
 
         return None
@@ -99,7 +156,7 @@ class Boardstate:
                 print(f"invalid move! try again, {player.piece}!")
 
            
-           temp = n.Node(player.piece, move)
+           temp = Node(player.piece, move)
            self.nodes.append(temp)
 
            for path in self.winningpaths:
@@ -149,7 +206,7 @@ class Boardstate:
             #check if computer has imminent wins
             if numuntilwin == 1:
                 nextmove = winning[winningarrayposition].nodesneeded()[0]
-                temp = n.Node(player.piece, nextmove)
+                temp = Node(player.piece, nextmove)
                 self.nodes.append(temp)
                 for path in self.winningpaths:
                     if temp.ID in path.nodeIDs:
@@ -159,7 +216,7 @@ class Boardstate:
             elif numuntilloss == 1:
 
                 nextmove = losing[losingarrayposition].nodesneeded()[0]
-                temp = n.Node(player.piece, nextmove)
+                temp = Node(player.piece, nextmove)
                 self.nodes.append(temp)
                 for path in self.winningpaths:
                     if temp.ID in path.nodeIDs:
@@ -169,7 +226,7 @@ class Boardstate:
             else:
                 if len(winning) > 0:
                     nextmove = random.choice(random.choice(winning).nodesneeded())
-                    temp = n.Node(player.piece, nextmove)
+                    temp = Node(player.piece, nextmove)
                     self.nodes.append(temp)
                     for path in self.winningpaths:
                         if temp.ID in path.nodeIDs:
@@ -177,7 +234,7 @@ class Boardstate:
                     return None
                 elif len(losing) > 0:
                     nextmove = random.choice(random.choice(losing).nodesneeded())
-                    temp = n.Node(player.piece, nextmove)
+                    temp = Node(player.piece, nextmove)
                     self.nodes.append(temp)
                     for path in self.winningpaths:
                         if temp.ID in path.nodeIDs:
@@ -185,7 +242,7 @@ class Boardstate:
                     return None
                 elif len(empty) > 0:
                     nextmove = random.choice(random.choice(empty).nodesneeded())
-                    temp = n.Node(player.piece, nextmove)
+                    temp = Node(player.piece, nextmove)
                     self.nodes.append(temp)
                     for path in self.winningpaths:
                         if temp.ID in path.nodeIDs:
@@ -193,7 +250,7 @@ class Boardstate:
                     return None
                 else:
                     nextmove = random.choice(random.choice(ties).nodesneeded())
-                    temp = n.Node(player.piece, nextmove)
+                    temp = Node(player.piece, nextmove)
                     self.nodes.append(temp)
                     for path in self.winningpaths:
                         if temp.ID in path.nodeIDs:
