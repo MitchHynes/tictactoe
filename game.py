@@ -14,12 +14,12 @@ class Game:
         
         if self.board.haswinner() == True:
             rc = call("./displaygame.sh")
-            self.board.print()
+            self.board.printgame()
             print(f"victory for {player.opponent.piece}!")
             return None
         elif len(self.board.nodes) == self.boardsize**2:
             rc = call("./displaygame.sh")
-            self.board.print()
+            self.board.printgame()
             print("tie game!")
             return None
 
@@ -29,7 +29,7 @@ class Game:
             #    print("node on board: " + node.ID)
             ###
             rc = call("./displaygame.sh")
-            self.board.print()
+            self.board.printgame()
             self.board.makemove(player)
             if player.mode == "computer":
                 time.sleep(0.5)

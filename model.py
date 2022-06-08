@@ -267,7 +267,7 @@ class Boardstate:
 
         return " "
 
-    def print(self):
+    def printgame(self):
         type1 = "   #   #   "
         type2 = "###########"
         print("\n")
