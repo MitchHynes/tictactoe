@@ -111,40 +111,28 @@ class Boardstate:
    
     def generatepaths(self, boardsize):
         #horizontal
+        leftrightdiagnodeIDs = []
+        rightleftdiagnodeIDs = []
         for i in range(1, boardsize + 1):
-            nodeIDs = []
+            horizontalnodeIDs = []
+            verticalnodeIDs = []
+
             for j in range(1, boardsize + 1):
-                nodeIDs.append(str(i) + str(j))
+                horizontalnodeIDs.append(str(i) + str(j))
+                verticalnodeIDs.append(str(j) + str(i))
 
-            temp = Winningpath(nodeIDs)
-            self.winningpaths.append(temp)
+            leftrightdiagnodeIDs.append(str(i) + str(i))
+            rightleftdiagnodeIDs.append((str(self.boardsize +1 - i) + str(i)))
+            temp1 = Winningpath(horizontalnodeIDs)
+            temp2 = Winningpath(verticalnodeIDs)
+            
+            self.winningpaths.append(temp1)
+            self.winningpaths.append(temp2)
 
-        #vertical
-        for i in range(1, boardsize + 1):
-            nodeIDs = []
-            for j in range(1, boardsize + 1):
-                nodeIDs.append(str(j) + str(i))
-
-            temp = Winningpath(nodeIDs)
-            self.winningpaths.append(temp)
-
-        #diagonal top left bottom right
-        nodeIDs = []
-        
-        for i in range(1, boardsize + 1):
-            nodeIDs.append(str(i) + str(i))
-        temp = Winningpath(nodeIDs)
-        self.winningpaths.append(temp)
-
-        #diagonal bottom left top right
-        nodeIDs = []
-
-        for i in range(1, boardsize + 1):
-            nodeIDs.append(str(self.boardsize +1 - i) + str(i))
-        temp = Winningpath(nodeIDs)
-        self.winningpaths.append(temp)
-
-        return None
+        temp3 = Winningpath(leftrightdiagnodeIDs)
+        temp4 = Winningpath(rightleftdiagnodeIDs)
+        self.winningpaths.append(temp3)
+        self.winningpaths.append(temp4)
 
     def haswinner(self):
         
