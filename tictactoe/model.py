@@ -163,9 +163,6 @@ class Boardstate:
         #HUMAN PLAYER
 
         if player.mode == "human":
-           #print("HUMAN TIME")
-           #rc = call("./displaygame.sh")
-           #self.print()
            print(f"enter your move, {player.piece}!")
            invalid = True
            while invalid:
