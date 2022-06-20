@@ -52,9 +52,9 @@ class Winningpath:
 
     """
 
-    def __init__(self, ID, nodeIDs):
+    def __init__(self, nodeIDs):
 
-        self.ID = ID
+      #  self.ID = ID
         self.nodeIDs = nodeIDs
         self.nodes = []  
         self.state = 0
@@ -113,43 +113,35 @@ class Boardstate:
         #horizontal
         for i in range(1, boardsize + 1):
             nodeIDs = []
-            fullid = ""
             for j in range(1, boardsize + 1):
                 nodeIDs.append(str(i) + str(j))
-                fullid = fullid + str(i) + str(j)
 
-            temp = Winningpath(fullid, nodeIDs)
+            temp = Winningpath(nodeIDs)
             self.winningpaths.append(temp)
 
         #vertical
         for i in range(1, boardsize + 1):
             nodeIDs = []
-            fullid = ""
             for j in range(1, boardsize + 1):
                 nodeIDs.append(str(j) + str(i))
-                fullid = fullid + str(j) + str(i)
 
-            temp = Winningpath(fullid, nodeIDs)
+            temp = Winningpath(nodeIDs)
             self.winningpaths.append(temp)
 
         #diagonal top left bottom right
         nodeIDs = []
-        fullid = ""
         
         for i in range(1, boardsize + 1):
             nodeIDs.append(str(i) + str(i))
-            fullid = fullid + str(i) + str(i)
-        temp = Winningpath(fullid, nodeIDs)
+        temp = Winningpath(nodeIDs)
         self.winningpaths.append(temp)
 
         #diagonal bottom left top right
         nodeIDs = []
-        fullid = ""
 
         for i in range(1, boardsize + 1):
             nodeIDs.append(str(self.boardsize +1 - i) + str(i))
-            fullid = fullid + str(self.boardsize + 1 - i) + str(i)
-        temp = Winningpath(fullid, nodeIDs)
+        temp = Winningpath(nodeIDs)
         self.winningpaths.append(temp)
 
         return None
