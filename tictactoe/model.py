@@ -1,12 +1,33 @@
 import random
 
 class Node:
+    """
+    A square on the board is occupied when a node is defined for it.
+    Attributes:
+    ----------
+    state: str
+            The player who creates the nodes Piece
+    ID: str
+            The position of the node on the board
+    """
+
 
     def __init__(self, state, ID):
         self.state = state
         self.ID = ID
 
 class Player:
+    """
+    Players are the objects that play the game.
+    Attributes:
+    ----------
+    mode: str
+            human or computer
+    piece: str
+            symbol that appears on board for that player
+    opponent: Player
+            Who the players opponent is
+    """
 
     def __init__(self, mode, piece):
 
@@ -16,6 +37,20 @@ class Player:
 
 
 class Winningpath:
+    """
+    Data Structure that contains a way to win the game.
+    Attributes:
+    ----------
+    ID: str
+            the node IDs of the WinningPath concatenated together
+    nodeIDs: str[]
+            list of node IDs as strings
+    nodes: Node[]
+            list of the Node objects currently present
+    state: int
+        state of the winningpath, 0 = can still win, 1 = won, -1 = can't win in this path
+
+    """
 
     def __init__(self, ID, nodeIDs):
 
@@ -25,6 +60,9 @@ class Winningpath:
         self.state = 0
 
     def addnode(self, node):
+        """
+        A node needed to win in this winning path has been obtained, track it
+        """
         self.nodes.append(node)
         for i in range(0, len(self.nodes)- 1):
             if self.nodes[i].state != self.nodes[i+1].state:
@@ -38,7 +76,9 @@ class Winningpath:
         return None
 
     def nodesneeded(self):
-        
+        """
+        returns nodes needed to win game with this winningpath
+        """
         needed = []
         for i in self.nodeIDs:
             needID = True
@@ -50,15 +90,15 @@ class Winningpath:
 
         return needed
 
-    def displayinfo(self):
-        print("\n")
-        print("path ID: " + self.ID)
-        print("nodes currently on path:") 
-        for node in self.nodes:
-            print("\tID: " + node.ID)
-            print("\tstate: " + str(node.state))
-        print("path state:" + str(self.state))
-        print("nodes needed: " + str(self.nodesneeded()))
+#    def displayinfo(self):
+#       print("\n")
+#       print("path ID: " + self.ID)
+#       print("nodes currently on path:") 
+#       for node in self.nodes:
+#           print("\tID: " + node.ID)
+#           print("\tstate: " + str(node.state))
+#       print("path state:" + str(self.state))
+#       print("nodes needed: " + str(self.nodesneeded()))
 
 class Boardstate:
 
