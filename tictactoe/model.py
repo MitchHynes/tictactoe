@@ -58,6 +58,7 @@ class Winningpath:
         self.nodeIDs = nodeIDs
         self.nodes = []  
         self.state = 0
+        self.winner = None
 
     def addnode(self, node):
         """
@@ -71,6 +72,7 @@ class Winningpath:
 
         if len(self.nodes) == len(self.nodeIDs):
             self.state = 1 #won the game
+            self.winner = self.nodes[0].ID
             return None
 
         return None
@@ -89,6 +91,7 @@ class Winningpath:
                 needed.append(i)
 
         return needed
+
 
 #    def displayinfo(self):
 #       print("\n")
@@ -136,11 +139,10 @@ class Boardstate:
 
     def haswinner(self):
         
-        for path in range (0, len(self.winningpaths)):
-            if self.winningpaths[path].state == 1: #winner found
-                self.winner = self.winningpaths[path].nodes[0].state
+        for path in self.winningpaths:
+            if path.winner != None: #winner found
+                self.winner = path.winner 
                 return True
-
         return False
 
     def validmove(self, move):
@@ -154,9 +156,7 @@ class Boardstate:
         for node in self.nodes:
             if node.ID == move:
                 return False
-
-        else:
-            return True
+        return True
 
     def makemove(self, player):
 
