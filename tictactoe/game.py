@@ -13,12 +13,12 @@ class Game:
     def play(self, player):
         
         if self.board.haswinner() == True:
-            rc = call("./displaygame.sh")
+            rc = call("./tictactoe/displaygame.sh")
             self.board.printgame()
             print(f"victory for {player.opponent.piece}!")
             return None
         elif len(self.board.nodes) == self.boardsize**2:
-            rc = call("./displaygame.sh")
+            rc = call("./tictactoe/displaygame.sh")
             self.board.printgame()
             print("tie game!")
             return None
@@ -28,7 +28,7 @@ class Game:
             #for node in self.nodes:
             #    print("node on board: " + node.ID)
             ###
-            rc = call("./displaygame.sh")
+            rc = call("./tictactoe/displaygame.sh")
             self.board.printgame()
             self.board.makemove(player)
             if player.mode == "computer":
