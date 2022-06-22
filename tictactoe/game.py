@@ -1,5 +1,6 @@
 import time
 import model
+import curses
 from subprocess import call
 
 class Game:
@@ -11,7 +12,6 @@ class Game:
         self.board = model.Boardstate(self.boardsize, self.player1, self.player2)
 
     def play(self, player):
-        
         if self.board.haswinner() == True:
             rc = call("./tictactoe/displaygame.sh")
             self.board.printgame()
@@ -30,13 +30,26 @@ class Game:
             ###
             rc = call("./tictactoe/displaygame.sh")
             self.board.printgame()
-            self.board.makemove(player)
+            player.makemove(self.board)
             if player.mode == "computer":
                 time.sleep(0.5)
             self.play(player.opponent)
 
     def main(self):
-        
         self.board.generatepaths(self.boardsize)
         self.play(self.player1)
 
+class Display:
+
+    def __init__(self):
+        self.screen = curses.initscr()
+        self.num_rows, self.num_columns = self.screen.getmaxyx()
+
+    def render(self):
+        pass
+
+    def renderwin(self):
+        pass
+
+    def rendertie(self):
+        pass
