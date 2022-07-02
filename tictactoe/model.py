@@ -35,122 +35,125 @@ class Player:
         self.piece = piece
         self.opponent = None
 
+class Human(Player):    
+
+    def __init__(self, piece):
+        super().__init__(mode="human", piece):
+
     def makemove(self, board):
+        print(f"enter your move, {self.piece}!")
+        invalid = True
+        while invalid:
+            move = input()
+            if board.validmove(move):
+                invalid = False
+                break
+            print(f"invalid move! try again, {self.piece}!")
 
-        #HUMAN PLAYER
+        temp = Node(self.piece, move)
+        board.nodes.append(temp)
 
-        if self.mode == "human":
-           print(f"enter your move, {self.piece}!")
-           invalid = True
-           while invalid:
-                move = input()
-                if board.validmove(move):
-                    invalid = False
-                    break
-                print(f"invalid move! try again, {self.piece}!")
-
-           temp = Node(self.piece, move)
-           board.nodes.append(temp)
-
-           for path in board.winningpaths:
-               if temp.ID in path.nodeIDs:
-                   path.addnode(temp)
-
-        #COMPUTER PLAYER
-
-        elif self.mode == "computer":
-           # print("COMPUTER TIME")
-            winning = []
-            empty = []
-            losing = []
-            ties = []
-            numuntilloss = 9999
-            numuntilwin = 9999
-            losingarrayposition = None
-            winningarrayposition = None
-
-            for path in board.winningpaths: 
-                #path.displayinfo()
-                if path.state == 0: #winning paths that can still be won
-
-                    if len(path.nodes) == 0: #empty winning path
-                        empty.append(path)
-                        #print("append empty")
-                        continue
-                    elif path.nodes[0].state != self.piece:
-                        losing.append(path)
-                        #print("append losing")
-
-                        if len(losing[len(losing)-1].nodesneeded()) < numuntilloss:
-                            numuntilloss = len(losing[len(losing)-1].nodesneeded())
-                            losingarrayposition = len(losing) - 1
-                            continue
-                    else:
-                        winning.append(path)
-                        #print("append winning")
-                        if len(winning[len(winning) - 1].nodesneeded()) < numuntilwin:
-                            numuntilwin = len(winning[len(winning) - 1].nodesneeded())
-                            winningarrayposition = len(winning) - 1
-                            continue
-                elif path.state == -1 and len(path.nodesneeded()) > 0:
-                    #print("append ties")
-                    ties.append(path)
-
-            #check if computer has imminent wins
-            if numuntilwin == 1:
-                nextmove = winning[winningarrayposition].nodesneeded()[0]
-                temp = Node(self.piece, nextmove)
-                board.nodes.append(temp)
-                for path in board.winningpaths:
-                    if temp.ID in path.nodeIDs:
-                        path.addnode(temp)
-                return None
-
-            elif numuntilloss == 1:
-
-                nextmove = losing[losingarrayposition].nodesneeded()[0]
-                temp = Node(self.piece, nextmove)
-                board.nodes.append(temp)
-                for path in board.winningpaths:
-                    if temp.ID in path.nodeIDs:
-                        path.addnode(temp)
-                return None
-
-            else:
-                if len(winning) > 0:
-                    nextmove = random.choice(random.choice(winning).nodesneeded())
-                    temp = Node(self.piece, nextmove)
-                    board.nodes.append(temp)
-                    for path in board.winningpaths:
-                        if temp.ID in path.nodeIDs:
-                            path.addnode(temp)
-                    return None
-                elif len(losing) > 0:
-                    nextmove = random.choice(random.choice(losing).nodesneeded())
-                    temp = Node(self.piece, nextmove)
-                    board.nodes.append(temp)
-                    for path in board.winningpaths:
-                        if temp.ID in path.nodeIDs:
-                            path.addnode(temp)
-                    return None
-                elif len(empty) > 0:
-                    nextmove = random.choice(random.choice(empty).nodesneeded())
-                    temp = Node(self.piece, nextmove)
-                    board.nodes.append(temp)
-                    for path in board.winningpaths:
-                        if temp.ID in path.nodeIDs:
-                            path.addnode(temp)
-                    return None
-                else:
-                    nextmove = random.choice(random.choice(ties).nodesneeded())
-                    temp = Node(self.piece, nextmove)
-                    board.nodes.append(temp)
-                    for path in board.winningpaths:
-                        if temp.ID in path.nodeIDs:
-                            path.addnode(temp)
-                    return None
+        for path in board.winningpaths:
+            if temp.ID in path.nodeIDs:
+                path.addnode(temp)
 
         return None
+
+class Computer(Player):
+
+    def __init__(self, mode="computer", piece):
+        super().__init__(piece):
+
+    def makemove(self, board):
+        # print("COMPUTER TIME")
+        winning = []
+        empty = []
+        losing = []
+        ties = []
+        numuntilloss = 9999
+        numuntilwin = 9999
+        losingarrayposition = None
+        winningarrayposition = None
+        for path in board.winningpaths: 
+            #path.displayinfo()
+            if path.state == 0: #winning paths that can still be won
+
+                if len(path.nodes) == 0: #empty winning path
+                    empty.append(path)
+                    #print("append empty")
+                    continue
+                elif path.nodes[0].state != self.piece:
+                    losing.append(path)
+                    #print("append losing")
+
+                    if len(losing[len(losing)-1].nodesneeded()) < numuntilloss:
+                        numuntilloss = len(losing[len(losing)-1].nodesneeded())
+                        losingarrayposition = len(losing) - 1
+                        continue
+                else:
+                    winning.append(path)
+                    #print("append winning")
+                    if len(winning[len(winning) - 1].nodesneeded()) < numuntilwin:
+                        numuntilwin = len(winning[len(winning) - 1].nodesneeded())
+                        winningarrayposition = len(winning) - 1
+                        continue
+            elif path.state == -1 and len(path.nodesneeded()) > 0:
+                #print("append ties")
+                ties.append(path)
+
+        #check if computer has imminent wins
+        if numuntilwin == 1:
+            nextmove = winning[winningarrayposition].nodesneeded()[0]
+            temp = Node(self.piece, nextmove)
+            board.nodes.append(temp)
+            for path in board.winningpaths:
+                if temp.ID in path.nodeIDs:
+                    path.addnode(temp)
+            return None
+
+        elif numuntilloss == 1:
+
+            nextmove = losing[losingarrayposition].nodesneeded()[0]
+            temp = Node(self.piece, nextmove)
+            board.nodes.append(temp)
+            for path in board.winningpaths:
+                if temp.ID in path.nodeIDs:
+                    path.addnode(temp)
+            return None
+
+        else:
+            if len(winning) > 0:
+                nextmove = random.choice(random.choice(winning).nodesneeded())
+                temp = Node(self.piece, nextmove)
+                board.nodes.append(temp)
+                for path in board.winningpaths:
+                    if temp.ID in path.nodeIDs:
+                        path.addnode(temp)
+                return None
+            elif len(losing) > 0:
+                nextmove = random.choice(random.choice(losing).nodesneeded())
+                temp = Node(self.piece, nextmove)
+                board.nodes.append(temp)
+                for path in board.winningpaths:
+                    if temp.ID in path.nodeIDs:
+                        path.addnode(temp)
+                return None
+            elif len(empty) > 0:
+                nextmove = random.choice(random.choice(empty).nodesneeded())
+                temp = Node(self.piece, nextmove)
+                board.nodes.append(temp)
+                for path in board.winningpaths:
+                    if temp.ID in path.nodeIDs:
+                        path.addnode(temp)
+                return None
+            else:
+                nextmove = random.choice(random.choice(ties).nodesneeded())
+                temp = Node(self.piece, nextmove)
+                board.nodes.append(temp)
+                for path in board.winningpaths:
+                    if temp.ID in path.nodeIDs:
+                        path.addnode(temp)
+                return None
 
 class Winningpath:
     """
